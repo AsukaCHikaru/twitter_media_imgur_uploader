@@ -1,5 +1,7 @@
 const TWITTER_BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN;
+const IMGUR_ACCESS_TOKEN = process.env.IMGUR_ACCESS_TOKEN;
 
 module.exports = {
   TWITTER_BEARER_TOKEN,
+  IMGUR_ACCESS_TOKEN,
 };

@@ -3,7 +3,7 @@ const axios = require("axios");
 const { TWITTER_BEARER_TOKEN } = require("./env");
 
 const axiosInstance = axios.create({
-  baseURL: "https://api.twitter.com/2/",
+  baseURL: "https://api.twitter.com/2",
   headers: {
     Authorization: `Bearer ${TWITTER_BEARER_TOKEN}`,
   },

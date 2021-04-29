@@ -10,6 +10,11 @@ const axiosInstance = axios.create({
 });
 
 const getMediaUrlsFromTwitter = async (userId, untilId) => {
+  if (!userId) {
+    console.log("Twitter used id necessary");
+    return;
+  }
+
   const params = {
     expansions: "attachments.media_keys",
     "media.fields": "url",
@@ -25,8 +30,11 @@ const getMediaUrlsFromTwitter = async (userId, untilId) => {
       params,
     });
     const { result_count, oldest_id } = response.data.meta;
-    const mediaUrls = response.data.includes.media.map((media) => media.url);
-    return { mediaUrls, result_count, oldest_id };
+    let mediaUrls = [];
+    if (response.data.includes) {
+      mediaUrls = response.data.includes.media.map((media) => media.url);
+    }
+    return { mediaUrls, resultCount: result_count, oldestId: oldest_id };
   } catch (error) {
     console.error(error);
   }

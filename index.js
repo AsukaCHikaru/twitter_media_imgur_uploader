@@ -1,18 +1,39 @@
 const { getMediaUrlsFromTwitter } = require("./twitterFetcher");
-
-let hasNextResults = true;
-let untilId;
+const { postCreateAlbum, postUploadImg } = require("./imgurLoader");
 
 const TWITTER_USER_ID = "";
+const ALBUM_NAME = "";
 
-(async () => {
-  while (hasNextResults) {
-    const { mediaUrls, resultCount, oldestId } = await getMediaUrlsFromTwitter(
-      TWITTER_USER_ID,
-      untilId
-    );
-    hasNextResults = resultCount === 10;
-    untilId = oldestId;
-    console.log(mediaUrls);
+const getMediaUrls = async (untilId, albumHash) => {
+  const { mediaUrls, resultCount, oldestId } = await getMediaUrlsFromTwitter(
+    TWITTER_USER_ID,
+    untilId
+  );
+  if (resultCount > 0) {
+    setUploadInterval(albumHash, mediaUrls, oldestId);
+  } else {
+    console.log("No result.");
   }
-})();
+};
+
+const setUploadInterval = (albumHash, mediaUrls, untilId) => {
+  if (mediaUrls.length === 0) {
+    getMediaUrls(untilId, albumHash);
+  }
+  const uploadInterval = setInterval(async () => {
+    if (mediaUrls.length === 0) {
+      clearInterval(uploadInterval);
+      getMediaUrls(untilId, albumHash);
+      return;
+    }
+    const mediaUrl = mediaUrls.shift();
+    await postUploadImg(albumHash, mediaUrl);
+  }, 3000);
+};
+
+const runFetchAndUpload = async () => {
+  const { albumId, albumDeleteHash } = await postCreateAlbum(ALBUM_NAME);
+  getMediaUrls("", albumDeleteHash);
+};
+
+runFetchAndUpload();

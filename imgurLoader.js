@@ -16,6 +16,9 @@ const postCreateAlbum = async (albumName) => {
       privacy: "hidden",
     });
     const { id, deletehash } = response.data.data;
+    console.log(
+      `Album ${albumName} created.\nAlbumId: ${id}, albumDeleteHash: ${deletehash}`
+    );
     return { albumId: id, albumDeleteHash: deletehash };
   } catch (error) {
     console.error(error);

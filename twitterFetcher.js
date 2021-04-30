@@ -31,8 +31,20 @@ const getMediaUrlsFromTwitter = async (userId, untilId) => {
     });
     const { result_count, oldest_id } = response.data.meta;
     let mediaUrls = [];
+    const mediaTweetMap = {};
     if (response.data.includes) {
-      mediaUrls = response.data.includes.media.map((media) => media.url);
+      const tweetWithMedia = response.data.data.filter(
+        (tweet) => tweet.attachments
+      );
+      tweetWithMedia.forEach((tweet) => {
+        tweet.attachments.media_keys.forEach((mediaKey) => {
+          mediaTweetMap[mediaKey] = tweet.id;
+        });
+      });
+      mediaUrls = response.data.includes.media.map((media) => ({
+        url: media.url,
+        tweetId: mediaTweetMap[media.media_key],
+      }));
     }
     return { mediaUrls, resultCount: result_count, oldestId: oldest_id };
   } catch (error) {

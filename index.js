@@ -27,7 +27,7 @@ const setUploadInterval = (albumHash, mediaUrls, untilId) => {
       return;
     }
     const mediaUrl = mediaUrls.shift();
-    await postUploadImg(albumHash, mediaUrl.url);
+    await postUploadImg(albumHash, mediaUrl.url, mediaUrl.tweetId);
   }, 3000);
 };
 

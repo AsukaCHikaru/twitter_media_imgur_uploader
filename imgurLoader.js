@@ -25,13 +25,16 @@ const postCreateAlbum = async (albumName) => {
   }
 };
 
-const postUploadImg = async (albumhash, imgUrl) => {
+const postUploadImg = async (albumhash, imgUrl, tweetId) => {
   try {
     const response = await axiosInstance.post("/image.json", {
       image: imgUrl,
       album: albumhash,
     });
-    console.log(imgUrl, "upload completed.");
+    console.log(response.headers["x-post-rate-limit-remaining"]);
+    console.log(response.headers["x-ratelimit-clientremaining"]);
+    console.log(response.headers["x-ratelimit-userremaining"]);
+    console.log(`${imgUrl} (from ${tweetId}) upload completed.`);
   } catch (error) {
     console.error(error);
   }
